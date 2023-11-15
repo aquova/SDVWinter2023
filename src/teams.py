@@ -5,11 +5,11 @@ from discord.ext import commands, tasks
 
 import db
 
-YOUR_SNOWMAN_PTS = 5
-THEIR_SNOWMAN_PTS = 3
+YOUR_SNOWMAN_PTS = 3
+THEIR_SNOWMAN_PTS = 2
 
-NORMAL_SNOWBALL = -3
-CRIT_SNOWBALL = -6
+NORMAL_SNOWBALL = -2
+CRIT_SNOWBALL = -5
 SNOWBALL_FAIL = -1
 
 FAIL_FLAVOR = [
@@ -116,8 +116,7 @@ def throw_snowball(src_user: discord.User | discord.Member, target_user: discord
     output = f"{str(src_user)} threw a snowball at {str(target_user)}"
     if odds < 6: # Fail
         db.add_points(src_team, SNOWBALL_FAIL)
-        db.add_points(target_team, SNOWBALL_FAIL)
-        output = f"{output}... but {choice(FAIL_FLAVOR)}! Critical failure! {SNOWBALL_FAIL} points to both their teams!"
+        output = f"{output}... but {choice(FAIL_FLAVOR)}! Critical failure! {SNOWBALL_FAIL} points to their team!"
     elif odds > 95: # Crit
         db.add_points(target_team, CRIT_SNOWBALL)
         output = f"{output}... and {choice(CRIT_FLAVOR)}! Critical hit! {CRIT_SNOWBALL} points to {str(target_user)}'s team!"
