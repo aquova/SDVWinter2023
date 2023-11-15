@@ -72,7 +72,7 @@ def add_submission(userid: int, channelid: int) -> bool:
     return True
 
 def get_submission_count(userid: int, channelid: int) -> int:
-    query = ("SELECT CNT(*) FROM submissions WHERE user_id=? AND channel_id=?", [userid, channelid])
+    query = ("SELECT COUNT(*) FROM submissions WHERE user_id=? AND channel_id=?", [userid, channelid])
     cnt = _db_read(query)[0]
     try:
         return cnt[0][0]

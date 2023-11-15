@@ -35,7 +35,7 @@ async def approve_task_context(interaction: discord.Interaction, message: discor
 @client.tree.context_menu(name="Reject")
 async def reject_task_context(interaction: discord.Interaction, message: discord.Message):
     # TODO: Send the user a DM that their item was rejected
-    await message.add_reaction("\N{X}")
+    await message.add_reaction("\N{NO ENTRY SIGN}")
     await interaction.response.send_message("Item rejected.", ephemeral=True)
 
 @client.tree.context_menu(name="Award points")
