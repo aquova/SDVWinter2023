@@ -35,7 +35,7 @@ async def approve_task_context(interaction: discord.Interaction, message: discor
 @client.tree.context_menu(name="Reject")
 async def reject_task_context(interaction: discord.Interaction, message: discord.Message):
     # TODO: Send the user a DM that their item was rejected
-    await message.add_reaction("\N{NO ENTRY SIGN}")
+    await message.add_reaction("🚫")
     await interaction.response.send_message("Item rejected.", ephemeral=True)
 
 @client.tree.context_menu(name="Award points")
@@ -64,14 +64,7 @@ async def throw_snowball_msg_context(interaction: discord.Interaction, message: 
     output = teams.throw_snowball(interaction.user, message.author)
     if output[0] != "":
         await client.log.send(output[0])
-        await message.add_reaction("\N{WHITE CIRCLE}")
-    await interaction.response.send_message(output[1], ephemeral=True)
-
-@client.tree.context_menu(name="Throw snowball")
-async def throw_snowball_user_context(interaction: discord.Interaction, user: discord.Member):
-    output = teams.throw_snowball(interaction.user, user)
-    if output[0] != "":
-        await client.log.send(output[0])
+        await message.add_reaction("⚪")
     await interaction.response.send_message(output[1], ephemeral=True)
 
 @client.tree.context_menu(name="Build snowman")
@@ -79,12 +72,5 @@ async def build_snowman_msg_context(interaction: discord.Interaction, message: d
     output = teams.build_snowman(interaction.user, message.author)
     if output[0] != "":
         await client.log.send(output[0])
-        await message.add_reaction("\N{SNOWMAN}")
-    await interaction.response.send_message(output[1], ephemeral=True)
-
-@client.tree.context_menu(name="Build snowman")
-async def build_snowman_user_context(interaction: discord.Interaction, user: discord.Member):
-    output = teams.build_snowman(interaction.user, user)
-    if output[0] != "":
-        await client.log.send(output[0])
+        await message.add_reaction("⛄")
     await interaction.response.send_message(output[1], ephemeral=True)

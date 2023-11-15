@@ -49,7 +49,7 @@ class ApproveModal(discord.ui.Modal):
             if submitted:
                 db.add_points_user(self.message.author.id, pts)
                 await interaction.response.send_message(f"Approved! {pts} points awarded to {self.team}", ephemeral=True)
-                await self.message.add_reaction("\N{BALLOT BOX WITH CHECK}")
+                await self.message.add_reaction("☑️")
             else:
                 await interaction.response.send_message(f"{str(self.message.author)} has maxed out the number of submissions for this task")
         except ValueError:
