@@ -39,6 +39,9 @@ class ApproveModal(discord.ui.Modal):
         )
         self.add_item(self.input)
 
+    def is_valid(self) -> bool:
+        return self.team is not None
+
     async def on_submit(self, interaction: discord.Interaction):
         try:
             pts = int(self.input.value)
@@ -46,7 +49,7 @@ class ApproveModal(discord.ui.Modal):
             if submitted:
                 db.add_points_user(self.message.author.id, pts)
                 await interaction.response.send_message(f"Approved! {pts} points awarded to {self.team}", ephemeral=True)
-                await self.message.add_reaction("ballot_box_with_check")
+                await self.message.add_reaction("\N{BALLOT BOX WITH CHECK}")
             else:
                 await interaction.response.send_message(f"{str(self.message.author)} has maxed out the number of submissions for this task")
         except ValueError:

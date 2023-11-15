@@ -14,7 +14,7 @@ class DiscordClient(commands.Bot):
 
     async def set_data(self, _: discord.Guild):
         self.log = cast(discord.TextChannel, self.get_channel(SNOWBALL_LOG))
-        # await self.add_cog(teams.LeaderboardCog(self.log))
+        await self.add_cog(teams.LeaderboardCog(self.log))
         self.add_view(SignupWidget())
 
     async def sync_guild(self, guild: discord.Guild):
@@ -26,12 +26,16 @@ client = DiscordClient()
 # This should be limited to desired roles in Discord's UI
 @client.tree.context_menu(name="Approve")
 async def approve_task_context(interaction: discord.Interaction, message: discord.Message):
-    await interaction.response.send_modal(teams.ApproveModal(message))
+    modal = teams.ApproveModal(message)
+    if modal.is_valid():
+        await interaction.response.send_modal(modal)
+    else:
+        await interaction.response.send_message("That user is not on a team", ephemeral=True)
 
 @client.tree.context_menu(name="Reject")
 async def reject_task_context(interaction: discord.Interaction, message: discord.Message):
     # TODO: Send the user a DM that their item was rejected
-    await message.add_reaction("x")
+    await message.add_reaction("\N{X}")
     await interaction.response.send_message("Item rejected.", ephemeral=True)
 
 @client.tree.context_menu(name="Award points")
