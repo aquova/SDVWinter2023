@@ -1,0 +1,7 @@
+version: "3"
+servies:
+  winter:
+    image: winter
+    restart: unless-stopped
+    volumes:
+      - ./src:/winter
