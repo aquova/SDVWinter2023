@@ -61,17 +61,14 @@ async def post_signup_context(interaction: discord.Interaction, message: discord
 
 @client.tree.context_menu(name="Throw snowball")
 async def throw_snowball_msg_context(interaction: discord.Interaction, message: discord.Message):
-    if isinstance(interaction.user, discord.User) or isinstance(message.author, discord.User):
-        return
     output = teams.throw_snowball(interaction.user, message.author)
     if output[0] != "":
         await client.log.send(output[0])
+        await message.add_reaction("\N{WHITE CIRCLE}")
     await interaction.response.send_message(output[1], ephemeral=True)
 
 @client.tree.context_menu(name="Throw snowball")
 async def throw_snowball_user_context(interaction: discord.Interaction, user: discord.Member):
-    if isinstance(interaction.user, discord.User):
-        return
     output = teams.throw_snowball(interaction.user, user)
     if output[0] != "":
         await client.log.send(output[0])
@@ -79,17 +76,14 @@ async def throw_snowball_user_context(interaction: discord.Interaction, user: di
 
 @client.tree.context_menu(name="Build snowman")
 async def build_snowman_msg_context(interaction: discord.Interaction, message: discord.Message):
-    if isinstance(interaction.user, discord.User) or isinstance(message.author, discord.User):
-        return
     output = teams.build_snowman(interaction.user, message.author)
     if output[0] != "":
         await client.log.send(output[0])
+        await message.add_reaction("\N{SNOWMAN}")
     await interaction.response.send_message(output[1], ephemeral=True)
 
 @client.tree.context_menu(name="Build snowman")
 async def build_snowman_user_context(interaction: discord.Interaction, user: discord.Member):
-    if isinstance(interaction.user, discord.User):
-        return
     output = teams.build_snowman(interaction.user, user)
     if output[0] != "":
         await client.log.send(output[0])

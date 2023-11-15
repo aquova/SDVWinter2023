@@ -74,10 +74,7 @@ def add_submission(userid: int, channelid: int) -> bool:
 def get_submission_count(userid: int, channelid: int) -> int:
     query = ("SELECT COUNT(*) FROM submissions WHERE user_id=? AND channel_id=?", [userid, channelid])
     cnt = _db_read(query)[0]
-    try:
-        return cnt[0][0]
-    except IndexError:
-        return 0
+    return cnt[0]
 
 def get_points(teamid: int) -> int:
     query = ("SELECT points FROM teams WHERE team_id=?", [teamid])

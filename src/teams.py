@@ -98,7 +98,7 @@ class LeaderboardCog(commands.Cog):
 
 # Returns two strings, the first is the message to post in the log
 # The second is a message to only show to the user. This needs to always exist
-def throw_snowball(src_user: discord.Member, target_user: discord.Member) -> tuple[str, str]:
+def throw_snowball(src_user: discord.User | discord.Member, target_user: discord.User | discord.Member) -> tuple[str, str]:
     src_team = db.get_team(src_user.id)
     target_team = db.get_team(target_user.id)
     if src_team is None:
@@ -126,7 +126,7 @@ def throw_snowball(src_user: discord.Member, target_user: discord.Member) -> tup
         output = f"{output}. {NORMAL_SNOWBALL} points to {str(target_user)}'s team."
     return (output, f"You threw a snowball at {str(target_user)}!")
 
-def build_snowman(src_user: discord.Member, target_user: discord.Member) -> tuple[str, str]:
+def build_snowman(src_user: discord.User | discord.Member, target_user: discord.User | discord.Member) -> tuple[str, str]:
     src_team = db.get_team(src_user.id)
     target_team = db.get_team(target_user.id)
     if src_team is None:
