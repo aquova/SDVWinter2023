@@ -15,6 +15,7 @@ class SignupWidgetButton(discord.ui.Button):
         try:
             team_check = db.get_team(interaction.user.id)
             if team_check is not None:
+                await interaction.response.send_message("You are already on a team!", ephemeral=True)
                 return
             team_info = [t for t in TEAMS if t["name"] == self.label][0]
             db.add_member(interaction.user.id, team_info["id"])
