@@ -140,4 +140,4 @@ def build_snowman(src_user: discord.User | discord.Member, target_user: discord.
     db.use_snowball(src_user.id)
     db.add_points(src_team, YOUR_SNOWMAN_PTS)
     db.add_points(target_team, THEIR_SNOWMAN_PTS)
-    return (f"{str(src_user)} and {str(target_user)} made a snowman together. How nice~!", f"You built a snowman with {str(target_user)}!")
+    return (f"{str(src_user)} and {str(target_user)} made a snowman together. How nice~! {YOUR_SNOWMAN_PTS} and {THEIR_SNOWMAN_PTS} to their teams respectively!", f"You built a snowman with {str(target_user)}!")
