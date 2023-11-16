@@ -32,7 +32,7 @@ class ApproveModal(discord.ui.Modal):
         self.message = message
         self.team = db.get_team_name(message.author.id)
         self.input = discord.ui.TextInput(
-            label=f"Number of points to award to {self.team}",
+            label="Number of points to award",
             placeholder="0",
             style=discord.TextStyle.short,
             required=True
@@ -62,7 +62,7 @@ class AwardPointsModal(discord.ui.Modal):
         self.recipiant = user
         self.team = db.get_team_name(user.id)
         self.input = discord.ui.TextInput(
-            label=f"Number of points to add to {self.team}",
+            label="Number of points to add",
             placeholder="0",
             style=discord.TextStyle.short,
             required=True
