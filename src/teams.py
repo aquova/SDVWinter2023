@@ -48,12 +48,12 @@ class ApproveModal(discord.ui.Modal):
             submitted = db.add_submission(self.message.author.id, self.message.channel.id)
             if submitted:
                 db.add_points_user(self.message.author.id, pts)
-                await interaction.response.send_message(f"Approved! {pts} points awarded to {self.team}", ephemeral=True)
+                await interaction.response.send_message(f"Approved! {pts} points awarded to {self.team}")
                 await self.message.add_reaction("☑️")
             else:
-                await interaction.response.send_message(f"{str(self.message.author)} has maxed out the number of submissions for this task")
+                await interaction.response.send_message(f"{str(self.message.author)} has maxed out the number of submissions for this task", ephemeral=True)
         except ValueError:
-            await interaction.response.send_message(f"{self.input.value} is not a number.")
+            await interaction.response.send_message(f"{self.input.value} is not a number.", ephemeral=True)
 
 class AwardPointsModal(discord.ui.Modal):
     def __init__(self, user: discord.Member):
@@ -78,7 +78,7 @@ class AwardPointsModal(discord.ui.Modal):
             db.add_points_user(self.recipiant.id, pts)
             await interaction.response.send_message(f"{pts} points added to {self.team}", ephemeral=True)
         except ValueError:
-            await interaction.response.send_message(f"{self.input.value} is not a number.")
+            await interaction.response.send_message(f"{self.input.value} is not a number.", ephemeral=True)
 
 class LeaderboardCog(commands.Cog):
     def __init__(self, log: discord.TextChannel):
