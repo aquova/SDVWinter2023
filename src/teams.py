@@ -26,6 +26,13 @@ CRIT_FLAVOR = [
     "don't mess around",
 ]
 
+SNOWMAN_FLAVOR = [
+    "It looks more like a snowgirl.",
+    "...I think they made it upside down.",
+    "It's very... abstract.",
+    "I've never seen a cube snowman before, but I like it.",
+]
+
 class ApproveModal(discord.ui.Modal):
     def __init__(self, message: discord.Message):
         super().__init__(title="Approve submission")
@@ -112,12 +119,12 @@ def throw_snowball(src_user: discord.User | discord.Member, target_user: discord
     if snowballs_remaining == 0:
         return ("", "You don't have any snowballs left!")
     db.use_snowball(src_user.id)
-    odds = randint(1, 100)
+    odds = randint(1, 20)
     output = f"{str(src_user)} threw a snowball at {str(target_user)}"
-    if odds < 6: # Fail
+    if odds == 1: # Fail
         db.add_points(src_team, SNOWBALL_FAIL)
         output = f"{output}... but {choice(FAIL_FLAVOR)}! Critical failure! {SNOWBALL_FAIL} points to their team!"
-    elif odds > 95: # Crit
+    elif odds == 20: # Crit
         db.add_points(target_team, CRIT_SNOWBALL)
         output = f"{output}... and {choice(CRIT_FLAVOR)}! Critical hit! {CRIT_SNOWBALL} points to {str(target_user)}'s team!"
     else:
@@ -140,4 +147,8 @@ def build_snowman(src_user: discord.User | discord.Member, target_user: discord.
     db.use_snowball(src_user.id)
     db.add_points(src_team, YOUR_SNOWMAN_PTS)
     db.add_points(target_team, THEIR_SNOWMAN_PTS)
-    return (f"{str(src_user)} and {str(target_user)} made a snowman together. How nice~! {YOUR_SNOWMAN_PTS} and {THEIR_SNOWMAN_PTS} to their teams respectively!", f"You built a snowman with {str(target_user)}!")
+    flavor = "How nice~!"
+    odds = randint(1, 20)
+    if odds == 20:
+        flavor = choice(SNOWMAN_FLAVOR)
+    return (f"{str(src_user)} and {str(target_user)} made a snowman together. {flavor} {YOUR_SNOWMAN_PTS} and {THEIR_SNOWMAN_PTS} to their teams respectively!", f"You built a snowman with {str(target_user)}!")
