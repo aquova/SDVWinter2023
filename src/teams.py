@@ -87,21 +87,12 @@ class AwardPointsModal(discord.ui.Modal):
         except ValueError:
             await interaction.response.send_message(f"{self.input.value} is not a number.", ephemeral=True)
 
-class LeaderboardCog(commands.Cog):
-    def __init__(self, log: discord.TextChannel):
-        self.post_lb.start()
-        self.log = log
-
-    def cog_unload(self) -> None:
-        self.post_lb.cancel()
-
-    @tasks.loop(hours=1)
-    async def post_lb(self):
-        embed = discord.Embed(title="Team Leaderboard", type="rich")
-        lb = db.get_leaderboard()
-        for team in lb:
-            embed.add_field(name=team[1], value=team[2], inline=False)
-        await self.log.send(embed=embed)
+def create_leaderboard_embed() -> discord.Embed:
+    embed = discord.Embed(title="Team Leaderboard", type="rich")
+    lb = db.get_leaderboard()
+    for team in lb:
+        embed.add_field(name=team[1], value=team[2], inline=False)
+    return embed
 
 # Returns two strings, the first is the message to post in the log
 # The second is a message to only show to the user. This needs to always exist

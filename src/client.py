@@ -14,7 +14,6 @@ class DiscordClient(commands.Bot):
 
     async def set_data(self, _: discord.Guild):
         self.log = cast(discord.TextChannel, self.get_channel(SNOWBALL_LOG))
-        await self.add_cog(teams.LeaderboardCog(self.log))
         self.add_view(SignupWidget())
 
     async def sync_guild(self, guild: discord.Guild):
@@ -54,10 +53,14 @@ async def snowball_count_context(interaction: discord.Interaction, user: discord
     else:
         await interaction.response.send_message("They are not on a team", ephemeral=True)
 
-@client.tree.context_menu(name="Post signup message")
-async def post_signup_context(interaction: discord.Interaction, message: discord.Message):
-    await message.channel.send("Choose a team to join!", view=SignupWidget())
-    await interaction.response.send_message("Signup message posted!", ephemeral=True)
+@client.tree.command(name="signup", description="Post the event signup message")
+async def post_signup_context(interaction: discord.Interaction):
+    await interaction.response.send_message("Choose a team to join!", view=SignupWidget())
+
+@client.tree.command(name="leaderboard", description="Post the team leaderboard")
+async def post_leaderboard_content(interaction: discord.Interaction):
+    embed = teams.create_leaderboard_embed()
+    await interaction.response.send_message(embed=embed)
 
 @client.tree.context_menu(name="Throw snowball")
 async def throw_snowball_msg_context(interaction: discord.Interaction, message: discord.Message):
