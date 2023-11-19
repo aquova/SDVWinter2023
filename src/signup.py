@@ -18,6 +18,9 @@ class SignupWidgetButton(discord.ui.Button):
                 await interaction.response.send_message("You are already on a team!", ephemeral=True)
                 return
             team_info = [t for t in TEAMS if t["name"] == self.label][0]
+            if not team_info["accepting"]:
+                await interaction.response.send_message(f"Sorry, {self.label} isn't accepting new members at the moment", ephemeral=True)
+                return
             db.add_member(interaction.user.id, team_info["id"])
             role_id = team_info["id"]
             team_role = discord.utils.get(interaction.user.guild.roles, id=role_id)
