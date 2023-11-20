@@ -83,9 +83,11 @@ class AwardPointsModal(discord.ui.Modal):
         except ValueError:
             await interaction.response.send_message(f"{self.input.value} is not a number.", ephemeral=True)
 
-def create_leaderboard_embed() -> discord.Embed:
-    embed = discord.Embed(title="Team Leaderboard", type="rich")
+def create_leaderboard_embed(guild: discord.Guild) -> discord.Embed:
     lb = db.get_leaderboard()
+    leading_role = discord.utils.get(guild.roles, id=lb[0][0])
+    color = leading_role.color if leading_role is not None else discord.Color.default.value
+    embed = discord.Embed(title="Team Leaderboard", type="rich", color=color)
     for team in lb:
         embed.add_field(name=team[1], value=team[2], inline=False)
     return embed

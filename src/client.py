@@ -33,7 +33,6 @@ async def approve_task_context(interaction: discord.Interaction, message: discor
 
 @client.tree.context_menu(name="Reject")
 async def reject_task_context(interaction: discord.Interaction, message: discord.Message):
-    # TODO: Send the user a DM that their item was rejected
     await message.add_reaction("🚫")
     await interaction.response.send_message("Item rejected.", ephemeral=True)
 
@@ -59,8 +58,9 @@ async def post_signup_context(interaction: discord.Interaction):
 
 @client.tree.command(name="leaderboard", description="Post the team leaderboard")
 async def post_leaderboard_content(interaction: discord.Interaction):
-    embed = teams.create_leaderboard_embed()
-    await interaction.response.send_message(embed=embed)
+    if interaction.guild is not None:
+        embed = teams.create_leaderboard_embed(interaction.guild)
+        await interaction.response.send_message(embed=embed)
 
 @client.tree.context_menu(name="Throw snowball")
 async def throw_snowball_msg_context(interaction: discord.Interaction, message: discord.Message):
