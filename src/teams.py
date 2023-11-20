@@ -51,7 +51,7 @@ class ApproveModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         try:
-            submitted = db.add_submission(self.message.author.id)
+            submitted = db.add_submission(self.message.id)
             if not submitted:
                 await interaction.response.send_message("This message has already been approved!", ephemeral=True)
                 return
