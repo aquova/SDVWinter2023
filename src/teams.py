@@ -51,35 +51,14 @@ class ApproveModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         try:
+            submitted = db.add_submission(self.message.author.id)
+            if not submitted:
+                await interaction.response.send_message("This message has already been approved!", ephemeral=True)
+                return
             pts = int(self.input.value)
             db.add_points_user(self.message.author.id, pts)
             await interaction.response.send_message(f"Approved! {pts} points awarded to {self.team}")
             await self.message.add_reaction("☑️")
-        except ValueError:
-            await interaction.response.send_message(f"{self.input.value} is not a number.", ephemeral=True)
-
-class AwardPointsModal(discord.ui.Modal):
-    def __init__(self, user: discord.Member):
-        super().__init__(title="Award points")
-
-        self.recipiant = user
-        self.team = db.get_team_name(user.id)
-        self.input = discord.ui.TextInput(
-            label="Number of points to add",
-            placeholder="0",
-            style=discord.TextStyle.short,
-            required=True
-        )
-        self.add_item(self.input)
-
-    def is_valid(self) -> bool:
-        return self.team is not None
-
-    async def on_submit(self, interaction: discord.Interaction):
-        try:
-            pts = int(self.input.value)
-            db.add_points_user(self.recipiant.id, pts)
-            await interaction.response.send_message(f"{pts} points added to {self.team}", ephemeral=True)
         except ValueError:
             await interaction.response.send_message(f"{self.input.value} is not a number.", ephemeral=True)
 

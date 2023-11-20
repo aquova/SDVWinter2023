@@ -36,14 +36,6 @@ async def reject_task_context(interaction: discord.Interaction, message: discord
     await message.add_reaction("🚫")
     await interaction.response.send_message("Item rejected.", ephemeral=True)
 
-@client.tree.context_menu(name="Award points")
-async def award_points_context(interaction: discord.Interaction, user: discord.Member):
-    modal = teams.AwardPointsModal(user)
-    if modal.is_valid():
-        await interaction.response.send_modal(modal)
-    else:
-        await interaction.response.send_message("That user is not on a team", ephemeral=True)
-
 @client.tree.context_menu(name="Snowball count")
 async def snowball_count_context(interaction: discord.Interaction, user: discord.Member):
     if db.get_team(user.id) is not None:
