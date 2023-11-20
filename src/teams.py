@@ -52,13 +52,9 @@ class ApproveModal(discord.ui.Modal):
     async def on_submit(self, interaction: discord.Interaction):
         try:
             pts = int(self.input.value)
-            submitted = db.add_submission(self.message.author.id, self.message.channel.id)
-            if submitted:
-                db.add_points_user(self.message.author.id, pts)
-                await interaction.response.send_message(f"Approved! {pts} points awarded to {self.team}")
-                await self.message.add_reaction("☑️")
-            else:
-                await interaction.response.send_message(f"{str(self.message.author)} has maxed out the number of submissions for this task", ephemeral=True)
+            db.add_points_user(self.message.author.id, pts)
+            await interaction.response.send_message(f"Approved! {pts} points awarded to {self.team}")
+            await self.message.add_reaction("☑️")
         except ValueError:
             await interaction.response.send_message(f"{self.input.value} is not a number.", ephemeral=True)
 
