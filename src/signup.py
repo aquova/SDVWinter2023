@@ -2,10 +2,12 @@ import discord
 from config import EVENT_ROLE, PERMANENT_ROLE, TEAMS
 import db
 
+BUTTONS_PER_ROW = 2
+
 class SignupWidgetButton(discord.ui.Button):
-    def __init__(self, text: str):
+    def __init__(self, text: str, row: int):
         custom_id = f"team_id:{text}"
-        super().__init__(style=discord.ButtonStyle.primary, label=text, custom_id=custom_id)
+        super().__init__(style=discord.ButtonStyle.primary, label=text, custom_id=custom_id, row=row)
 
     async def callback(self, interaction: discord.Interaction):
         # This is here mainly to shut up the linter
@@ -36,5 +38,6 @@ class SignupWidgetButton(discord.ui.Button):
 class SignupWidget(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        for team in TEAMS:
-            self.add_item(SignupWidgetButton(team["name"]))
+        for idx, team in enumerate(TEAMS):
+            row = int(idx / BUTTONS_PER_ROW)
+            self.add_item(SignupWidgetButton(team["name"], row))
