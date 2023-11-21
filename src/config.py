@@ -1,7 +1,6 @@
 import json
 
 STARTING_SNOWBALLS = 10
-SUBMISSION_MAX = 4
 SNOWBALL_EMOJI = "white_circle"
 SNOWMAN_EMOJI = "snowman"
 
@@ -15,3 +14,4 @@ TEAMS = cfg["teams"]
 EVENT_ROLE = cfg["roles"]["event"]
 PERMANENT_ROLE = cfg["roles"]["permanent"]
 SNOWBALL_LOG = cfg["channels"]["log"]
+SUBMISSIONS = cfg["channels"]["submissions"]

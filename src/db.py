@@ -1,11 +1,13 @@
 import sqlite3
-from config import DATABASE_PATH, STARTING_SNOWBALLS, TEAMS
+
+from config import DATABASE_PATH, STARTING_SNOWBALLS, SUBMISSIONS, TEAMS
+import err
 
 def initialize():
     sqlconn = sqlite3.connect(DATABASE_PATH)
     sqlconn.execute("CREATE TABLE IF NOT EXISTS teams (team_id INT PRIMARY KEY, team_name TEXT, points INT, UNIQUE(team_id));")
     sqlconn.execute("CREATE TABLE IF NOT EXISTS members (user_id INT PRIMARY KEY, team INT, snowballs INT, FOREIGN KEY(team) REFERENCES teams(team_id));")
-    sqlconn.execute("CREATE TABLE IF NOT EXISTS submissions (message_id INT PRIMARY KEY);")
+    sqlconn.execute("CREATE TABLE IF NOT EXISTS submissions (user_id INT, message_id INT, channel_id INT, FOREIGN KEY(user_id) REFERENCES members(user_id));")
 
     for team in TEAMS:
         sqlconn.execute("INSERT OR IGNORE INTO teams (team_id, team_name, points) VALUES (?, ?, ?)", [team["id"], team["name"], 0])
@@ -62,19 +64,24 @@ def add_points(teamid: int, pts: int):
     update_query = ("REPLACE INTO teams (team_id, team_name, points) VALUES (?, ?, ?)", [teamid, old_pts[1], new_pts])
     _db_write(update_query)
 
-# Returns whether submission was accepted or not
-def add_submission(messageid: int) -> bool:
+def add_submission(userid, messageid, channelid: int):
     if already_submitted(messageid):
-        return False
-
-    query = ("INSERT INTO submissions (message_id) VALUES (?)", [messageid])
+        raise err.AlreadySubmittedError
+    if hit_submission_limit(userid, channelid):
+        raise err.TooManySubmissionsError
+    query = ("INSERT INTO submissions (user_id, message_id, channel_id) VALUES (?, ?, ?)", [userid, messageid, channelid])
     _db_write(query)
-    return True
 
 def already_submitted(message_id: int) -> bool:
     query = ("SELECT COUNT(*) FROM submissions WHERE message_id=?", [message_id])
-    cnt = _db_read(query)[0]
-    return cnt[0] > 0
+    cnt = _db_read(query)[0][0]
+    return cnt > 0
+
+def hit_submission_limit(user_id, channel_id: int) -> bool:
+    query = ("SELECT COUNT(*) FROM submissions WHERE user_id=? AND channel_id=?", [user_id, channel_id])
+    cnt = _db_read(query)[0][0]
+    limit = SUBMISSIONS[str(channel_id)]
+    return cnt >= limit
 
 def get_points(teamid: int) -> int:
     query = ("SELECT points FROM teams WHERE team_id=?", [teamid])

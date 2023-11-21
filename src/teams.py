@@ -1,9 +1,8 @@
 from random import choice, randint
 
 import discord
-from discord.ext import commands, tasks
 
-import db
+import db, err
 
 YOUR_SNOWMAN_PTS = 3
 THEIR_SNOWMAN_PTS = 2
@@ -51,16 +50,17 @@ class ApproveModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         try:
-            submitted = db.add_submission(self.message.id)
-            if not submitted:
-                await interaction.response.send_message("This message has already been approved!", ephemeral=True)
-                return
+            db.add_submission(self.message.author.id, self.message.id, self.message.channel.id)
             pts = int(self.input.value)
             db.add_points_user(self.message.author.id, pts)
             await interaction.response.send_message(f"Approved! {pts} points awarded to {self.team}")
             await self.message.add_reaction("☑️")
         except ValueError:
             await interaction.response.send_message(f"{self.input.value} is not a number.", ephemeral=True)
+        except err.TooManySubmissionsError:
+            await interaction.response.send_message("That user has already submitted the max number!", ephemeral=True)
+        except err.AlreadySubmittedError:
+            await interaction.response.send_message("This message has already been approved!", ephemeral=True)
 
 def create_leaderboard_embed(guild: discord.Guild) -> discord.Embed:
     lb = db.get_leaderboard()
