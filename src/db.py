@@ -80,8 +80,11 @@ def already_submitted(message_id: int) -> bool:
 def hit_submission_limit(user_id, channel_id: int) -> bool:
     query = ("SELECT COUNT(*) FROM submissions WHERE user_id=? AND channel_id=?", [user_id, channel_id])
     cnt = _db_read(query)[0][0]
-    limit = SUBMISSIONS[str(channel_id)]
-    return cnt >= limit
+    try:
+        limit = SUBMISSIONS[str(channel_id)]
+        return cnt >= limit
+    except KeyError:
+        return False
 
 def get_points(teamid: int) -> int:
     query = ("SELECT points FROM teams WHERE team_id=?", [teamid])
