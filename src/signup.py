@@ -1,5 +1,5 @@
 import discord
-from config import EVENT_ROLE, PERMANENT_ROLE, TEAMS
+from config import EVENT_ROLE, GAMES_ROLE, PERMANENT_ROLE, TEAMS
 import db
 
 BUTTONS_PER_ROW = 2
@@ -35,9 +35,33 @@ class SignupWidgetButton(discord.ui.Button):
         except IndexError:
             print("Unknown sign up button clicked")
 
+class EventGamesButton(discord.ui.Button):
+    def __init__(self, text: str, row: int):
+        custom_id = "games"
+        super().__init__(style=discord.ButtonStyle.green, label=text, custom_id=custom_id, row=row)
+
+    async def callback(self, interaction: discord.Interaction):
+        if isinstance(interaction.user, discord.User):
+            return
+
+        games_role = discord.utils.get(interaction.user.guild.roles, id=GAMES_ROLE)
+        if games_role is None:
+            return
+
+        if interaction.user.get_role(GAMES_ROLE) is None:
+            await interaction.user.add_roles(games_role)
+            await interaction.response.send_message("You have signed up to be pinged for mini-events!", ephemeral=True)
+        else:
+            await interaction.user.remove_roles(games_role)
+            await interaction.response.send_message("You will no longer be pinged for mini-events", ephemeral=True)
+
+
 class SignupWidget(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        for idx, team in enumerate(TEAMS):
+        idx = 0
+        for team in TEAMS:
             row = int(idx / BUTTONS_PER_ROW)
             self.add_item(SignupWidgetButton(team["name"], row))
+            idx += 1
+        self.add_item(EventGamesButton("Ping Me for Games!", int(idx / BUTTONS_PER_ROW)))
