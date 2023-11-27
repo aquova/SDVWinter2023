@@ -119,4 +119,6 @@ def build_snowman(src_user: discord.User | discord.Member, target_user: discord.
     odds = randint(1, 20)
     if odds == 20:
         flavor = choice(SNOWMAN_FLAVOR)
-    return (f"{str(src_user)} and {str(target_user)} made a snowman together. {flavor} {YOUR_SNOWMAN_PTS} and {THEIR_SNOWMAN_PTS} to their teams respectively!", f"You built a snowman with {str(target_user)}!")
+    src_name = db.get_team_name(src_user.id)
+    target_name = db.get_team_name(target_user.id)
+    return (f"{str(src_user)} and {str(target_user)} made a snowman together. {flavor} {YOUR_SNOWMAN_PTS} points to {src_name} and {THEIR_SNOWMAN_PTS} points to {target_name}!", f"You built a snowman with {str(target_user)}!")
