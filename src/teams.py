@@ -22,7 +22,7 @@ CRIT_FLAVOR = [
     "SMAAAASH",
     "it landed perfectly",
     "they rolled a 20",
-    "don't mess around",
+    "bullseye",
 ]
 
 SNOWMAN_FLAVOR = [
@@ -88,17 +88,17 @@ def throw_snowball(src_user: discord.User | discord.Member, target_user: discord
         return ("", "You don't have any snowballs left!")
     db.use_snowball(src_user.id)
     odds = randint(1, 20)
-    output = f"{str(src_user)} threw a snowball at {str(target_user)}"
+    output = f"`{str(src_user)}` threw a snowball at `{str(target_user)}`"
     if odds == 1: # Fail
         db.add_points(src_team, SNOWBALL_FAIL)
         output = f"{output}... but {choice(FAIL_FLAVOR)}! Critical failure! {SNOWBALL_FAIL} points to their team!"
     elif odds == 20: # Crit
         db.add_points(target_team, CRIT_SNOWBALL)
-        output = f"{output}... and {choice(CRIT_FLAVOR)}! Critical hit! {CRIT_SNOWBALL} points to {str(target_user)}'s team!"
+        output = f"{output}... and {choice(CRIT_FLAVOR)}! Critical hit! {CRIT_SNOWBALL} points to `{str(target_user)}`'s team!"
     else:
         db.add_points(target_team, NORMAL_SNOWBALL)
-        output = f"{output}. {NORMAL_SNOWBALL} points to {str(target_user)}'s team."
-    return (output, f"You threw a snowball at {str(target_user)}!")
+        output = f"{output}. {NORMAL_SNOWBALL} points to `{str(target_user)}`'s team."
+    return (output, f"You threw a snowball at `{str(target_user)}`!")
 
 def build_snowman(src_user: discord.User | discord.Member, target_user: discord.User | discord.Member) -> tuple[str, str]:
     src_team = db.get_team(src_user.id)
@@ -121,4 +121,4 @@ def build_snowman(src_user: discord.User | discord.Member, target_user: discord.
         flavor = choice(SNOWMAN_FLAVOR)
     src_name = db.get_team_name(src_user.id)
     target_name = db.get_team_name(target_user.id)
-    return (f"{str(src_user)} and {str(target_user)} made a snowman together. {flavor} {YOUR_SNOWMAN_PTS} points to {src_name} and {THEIR_SNOWMAN_PTS} points to {target_name}!", f"You built a snowman with {str(target_user)}!")
+    return (f"`{str(src_user)}` and `{str(target_user)}` made a snowman together. {flavor} {YOUR_SNOWMAN_PTS} points to {src_name} and {THEIR_SNOWMAN_PTS} points to {target_name}!", f"You built a snowman with `{str(target_user)}`!")
