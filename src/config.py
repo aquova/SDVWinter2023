@@ -1,6 +1,6 @@
 import json
 
-STARTING_SNOWBALLS = 10
+STARTING_SNOWBALLS = 15
 SNOWBALL_EMOJI = "white_circle"
 SNOWMAN_EMOJI = "snowman"
 
