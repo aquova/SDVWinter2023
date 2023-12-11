@@ -5,9 +5,9 @@ import db
 BUTTONS_PER_ROW = 2
 
 class SignupWidgetButton(discord.ui.Button):
-    def __init__(self, text: str, row: int):
+    def __init__(self, text: str, row: int, disabled: bool):
         custom_id = f"team_id:{text}"
-        super().__init__(style=discord.ButtonStyle.primary, label=text, custom_id=custom_id, row=row)
+        super().__init__(style=discord.ButtonStyle.primary, label=text, custom_id=custom_id, row=row, disabled=disabled)
 
     async def callback(self, interaction: discord.Interaction):
         # This is here mainly to shut up the linter
@@ -62,6 +62,6 @@ class SignupWidget(discord.ui.View):
         idx = 0
         for team in TEAMS:
             row = int(idx / BUTTONS_PER_ROW)
-            self.add_item(SignupWidgetButton(team["name"], row))
+            self.add_item(SignupWidgetButton(team["name"], row, not team["accepting"]))
             idx += 1
         self.add_item(EventGamesButton("Ping Me for Games!", int(idx / BUTTONS_PER_ROW)))
